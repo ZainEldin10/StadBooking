@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ملعبي | إدارة وحجوزات الملاعب</title>
+    <meta
+      name="description"
+      content="منصة حديثة لإدارة حجوزات الملاعب والفرق والمتجر الرياضي."
+    />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="ملعبي">
+        <span class="brand-mark"><i data-lucide="goal"></i></span>
+        <span>ملعبي</span>
+      </a>
+
+      <nav class="main-nav" aria-label="التنقل الرئيسي">
+        <a href="#booking">الحجوزات</a>
+        <a href="#teams">الفرق</a>
+        <a href="#shop">المتجر</a>
+        <a href="#admin">الإدارة</a>
+      </nav>
+
+      <div class="top-actions">
+        <button class="ghost-btn" type="button">دخول</button>
+        <a class="primary-btn" href="#booking">احجز الآن</a>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero-section" aria-label="واجهة منصة ملعبي">
+        <div class="hero-media" aria-hidden="true"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal">
+          <span class="eyebrow">منصة ملعب احترافية</span>
+          <h1>ملعبي</h1>
+          <p>
+            حجز سريع، إدارة فرق ذكية، طلب لاعب عند النقص، ومتجر رياضي صغير في تجربة
+            واحدة تشبه التطبيقات الحديثة.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-btn xl" href="#booking">ابدأ الحجز</a>
+            <a class="outline-btn xl" href="#admin">لوحة الإدارة</a>
+          </div>
+        </div>
+
+        <div class="hero-dock reveal">
+          <article>
+            <i data-lucide="calendar-check"></i>
+            <strong>18</strong>
+            <span>حجز اليوم</span>
+          </article>
+          <article>
+            <i data-lucide="users-round"></i>
+            <strong>32</strong>
+            <span>لاعب متاح</span>
+          </article>
+          <article>
+            <i data-lucide="shopping-bag"></i>
+            <strong>12</strong>
+            <span>منتج رياضي</span>
+          </article>
+          <article>
+            <i data-lucide="trending-up"></i>
+            <strong>8-10</strong>
+            <span>وقت الذروة</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="quick-panel">
+        <div class="section-title reveal">
+          <span>كل شيء من شاشة واحدة</span>
+          <h2>تشغيل الملعب بدون تعقيد</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card reveal">
+            <i data-lucide="clock-3"></i>
+            <h3>حجوزات مباشرة</h3>
+            <p>عرض الأوقات المتاحة، تحديد المدة، وتأكيد الحجز فورًا مع منع التداخل.</p>
+          </article>
+          <article class="feature-card reveal">
+            <i data-lucide="shield-plus"></i>
+            <h3>فرق ولاعبون</h3>
+            <p>ملفات لاعبين، إنشاء فرق، إضافة أعضاء، ومتابعة المباريات القادمة.</p>
+          </article>
+          <article class="feature-card reveal">
+            <i data-lucide="badge-percent"></i>
+            <h3>ولاء وعروض</h3>
+            <p>خصم تلقائي في الحجز السادس بعد كل خمس حجوزات مع قابلية إضافة كوبونات.</p>
+          </article>
+          <article class="feature-card reveal">
+            <i data-lucide="store"></i>
+            <h3>متجر أثناء الحجز</h3>
+            <p>بيع كرات وملابس وإكسسوارات وإضافتها للسلة من داخل مسار الحجز.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="booking-section" id="booking">
+        <div class="section-title reveal">
+          <span>نظام الحجوزات</span>
+          <h2>اختر الوقت المناسب</h2>
+        </div>
+
+        <div class="booking-layout">
+          <div class="booking-card reveal">
+            <div class="card-head">
+              <div>
+                <span class="mini-label">اليوم</span>
+                <h3>الأوقات المتاحة</h3>
+              </div>
+              <div class="segmented" role="tablist" aria-label="اختيار مدة الحجز">
+                <button class="duration-option is-active" type="button" data-duration="60">
+                  60د
+                </button>
+                <button class="duration-option" type="button" data-duration="90">90د</button>
+                <button class="duration-option" type="button" data-duration="120">
+                  120د
+                </button>
+              </div>
+            </div>
+
+            <div class="slots-grid" id="slotsGrid" aria-live="polite"></div>
+
+            <div class="booking-summary">
+              <div>
+                <span>الموعد المختار</span>
+                <strong id="selectedSlotText">اختر وقتًا</strong>
+              </div>
+              <div>
+                <span>السعر</span>
+                <strong id="selectedPriceText">--</strong>
+              </div>
+              <button class="primary-btn" id="confirmBooking" type="button">تأكيد الحجز</button>
+            </div>
+          </div>
+
+          <aside class="side-stack">
+            <article class="loyalty-card reveal">
+              <div>
+                <span class="mini-label">نظام الولاء</span>
+                <h3>باقي حجز واحد للخصم</h3>
+              </div>
+              <div class="progress-ring" style="--progress: 80%">
+                <span>4/5</span>
+              </div>
+              <p>بعد الحجز الخامس يحصل اللاعب على خصم في الحجز السادس تلقائيًا.</p>
+            </article>
+
+            <article class="upcoming-card reveal">
+              <div class="card-head compact">
+                <h3>الحجوزات القادمة</h3>
+                <i data-lucide="calendar-days"></i>
+              </div>
+              <ul id="upcomingBookings">
+                <li><span>فريق البلد</span><strong>اليوم 8:00 م</strong></li>
+                <li><span>فريق المحاجنة</span><strong>غدًا 9:30 م</strong></li>
+                <li><span>فريق الخضور</span><strong>الجمعة 7:00 م</strong></li>
+              </ul>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <section class="teams-section" id="teams">
+        <div class="section-title reveal">
+          <span>اللاعبون والفرق</span>
+          <h2>كوّن فريقك أو انضم لمباراة</h2>
+        </div>
+
+        <div class="team-layout">
+          <article class="app-panel player-request reveal">
+            <div class="card-head">
+              <div>
+                <span class="mini-label">طلب لاعب</span>
+                <h3>ناقصنا لاعب الساعة 8 مساءً</h3>
+              </div>
+              <span class="status-pill live">مباشر</span>
+            </div>
+            <div class="request-list">
+              <button class="request-row" type="button">
+                <span><i data-lucide="user-plus"></i> فريق البلد يحتاج مهاجم</span>
+                <strong>8:00 م</strong>
+              </button>
+              <button class="request-row" type="button">
+                <span><i data-lucide="user-plus"></i> فريق المحاجنة يحتاج حارس</span>
+                <strong>9:30 م</strong>
+              </button>
+              <button class="request-row" type="button">
+                <span><i data-lucide="user-plus"></i> مباراة مفتوحة تحتاج لاعبَين</span>
+                <strong>10:00 م</strong>
+              </button>
+            </div>
+          </article>
+
+          <article class="app-panel reveal">
+            <div class="card-head compact">
+              <h3>تحديات الفرق</h3>
+              <i data-lucide="swords"></i>
+            </div>
+            <div class="challenge-card">
+              <div>
+                <span>فريق الخضور</span>
+                <strong>ضد فريق الاغبارية</strong>
+              </div>
+              <div class="challenge-actions">
+                <button class="icon-btn accept" type="button" aria-label="قبول">
+                  <i data-lucide="check"></i>
+                </button>
+                <button class="icon-btn reject" type="button" aria-label="رفض">
+                  <i data-lucide="x"></i>
+                </button>
+              </div>
+            </div>
+            <div class="team-strip">
+              <span>مباريات قادمة</span>
+              <strong>6</strong>
+            </div>
+          </article>
+
+          <article class="app-panel profile-card reveal">
+            <div class="avatar">AK</div>
+            <h3>أحمد خالد</h3>
+            <p>لاعب وسط · متاح اليوم من 7 إلى 10 مساءً</p>
+            <div class="profile-stats">
+              <span><strong>14</strong> مباراة</span>
+              <span><strong>4.8</strong> تقييم</span>
+              <span><strong>3</strong> فرق</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="shop-section" id="shop">
+        <div class="section-title reveal">
+          <span>المتجر الرياضي</span>
+          <h2>إضافات جاهزة مع الحجز</h2>
+        </div>
+
+        <div class="shop-layout">
+          <div class="products-grid" id="productsGrid"></div>
+          <aside class="cart-panel reveal">
+            <div class="card-head compact">
+              <h3>السلة</h3>
+              <i data-lucide="shopping-cart"></i>
+            </div>
+            <ul id="cartList">
+              <li class="muted">لم تتم إضافة منتجات بعد</li>
+            </ul>
+            <div class="cart-total">
+              <span>الإجمالي</span>
+              <strong id="cartTotal">0 ش.ج</strong>
+            </div>
+            <button class="primary-btn full" type="button">إضافة للحجز</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="admin-section" id="admin">
+        <div class="section-title reveal">
+          <span>لوحة الإدارة</span>
+          <h2>قرارات أسرع لصاحب الملعب</h2>
+        </div>
+
+        <div class="admin-grid">
+          <article class="metric-card reveal">
+            <i data-lucide="banknote"></i>
+            <span>إيرادات اليوم</span>
+            <strong>3,850 ش.ج</strong>
+          </article>
+          <article class="metric-card reveal">
+            <i data-lucide="calendar-range"></i>
+            <span>نسبة الإشغال</span>
+            <strong>78%</strong>
+          </article>
+          <article class="metric-card reveal">
+            <i data-lucide="users"></i>
+            <span>لاعبون نشطون</span>
+            <strong>246</strong>
+          </article>
+          <article class="metric-card reveal">
+            <i data-lucide="package"></i>
+            <span>طلبات المتجر</span>
+            <strong>19</strong>
+          </article>
+        </div>
+
+        <div class="dashboard-layout">
+          <article class="app-panel reveal">
+            <div class="card-head compact">
+              <h3>أوقات الذروة</h3>
+              <i data-lucide="bar-chart-3"></i>
+            </div>
+            <div class="bars" aria-label="رسم إحصائي لأوقات الذروة">
+              <span style="--h: 35%"><b>5م</b></span>
+              <span style="--h: 48%"><b>6م</b></span>
+              <span style="--h: 62%"><b>7م</b></span>
+              <span style="--h: 92%"><b>8م</b></span>
+              <span style="--h: 88%"><b>9م</b></span>
+              <span style="--h: 66%"><b>10م</b></span>
+            </div>
+          </article>
+
+          <article class="app-panel reveal">
+            <div class="card-head compact">
+              <h3>إدارة سريعة</h3>
+              <i data-lucide="settings-2"></i>
+            </div>
+            <div class="admin-actions">
+              <button type="button"><i data-lucide="calendar-plus"></i> إضافة حجز</button>
+              <button type="button"><i data-lucide="shirt"></i> منتج جديد</button>
+              <button type="button"><i data-lucide="ticket-percent"></i> كوبون خصم</button>
+              <button type="button"><i data-lucide="user-cog"></i> إدارة لاعب</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>ملعبي</span>
+      <span>نموذج واجهة قابل للتطوير إلى Next.js + API + قاعدة بيانات</span>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

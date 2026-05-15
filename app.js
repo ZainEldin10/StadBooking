@@ -1,13 +1,19 @@
 const slots = [
-  { time: "5:00 م", price: 220 },
-  { time: "6:00 م", price: 260 },
-  { time: "7:00 م", price: 320 },
-  { time: "8:00 م", price: 380 },
-  { time: "9:00 م", price: 380 },
-  { time: "10:00 م", price: 320 },
-  { time: "11:00 م", price: 260 },
-  { time: "12:00 ص", price: 220 },
+  { time: "5:00 م" },
+  { time: "6:00 م" },
+  { time: "7:00 م" },
+  { time: "8:00 م" },
+  { time: "9:00 م" },
+  { time: "10:00 م" },
+  { time: "11:00 م" },
+  { time: "12:00 ص" },
 ];
+
+const durationPrices = {
+  60: 200,
+  90: 250,
+  120: 300,
+};
 
 const products = [
   { name: "كرة تدريب احترافية", price: 85, icon: "circle-dot" },
@@ -96,8 +102,8 @@ function formatCurrency(value) {
   return `${value} ش.ج`;
 }
 
-function durationMultiplier() {
-  return selectedDuration / 60;
+function currentBookingPrice() {
+  return durationPrices[selectedDuration];
 }
 
 function getWeekDays() {
@@ -143,7 +149,7 @@ function renderSlots() {
     button.disabled = isBooked;
     button.innerHTML = `
       <strong>${slot.time}</strong>
-      <span>${isBooked ? "محجوز" : formatCurrency(slot.price * durationMultiplier())}</span>
+      <span>${isBooked ? "محجوز" : formatCurrency(currentBookingPrice())}</span>
     `;
 
     button.addEventListener("click", () => {
@@ -188,7 +194,7 @@ function updateBookingSummary() {
   const slot = slots[selectedSlot];
   const day = getWeekDays()[selectedDateIndex];
   selectedSlotText.textContent = `${day.label} ${slot.time} لمدة ${selectedDuration} دقيقة`;
-  selectedPriceText.textContent = formatCurrency(slot.price * durationMultiplier());
+  selectedPriceText.textContent = formatCurrency(currentBookingPrice());
 }
 
 function confirmSelectedBooking() {

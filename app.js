@@ -1,12 +1,12 @@
 const slots = [
-  { time: "5:00 م", price: 220, booked: false },
-  { time: "6:00 م", price: 260, booked: false },
-  { time: "7:00 م", price: 320, booked: true },
-  { time: "8:00 م", price: 380, booked: false },
-  { time: "9:00 م", price: 380, booked: true },
-  { time: "10:00 م", price: 320, booked: false },
-  { time: "11:00 م", price: 260, booked: false },
-  { time: "12:00 ص", price: 220, booked: false },
+  { time: "5:00 م", price: 220 },
+  { time: "6:00 م", price: 260 },
+  { time: "7:00 م", price: 320 },
+  { time: "8:00 م", price: 380 },
+  { time: "9:00 م", price: 380 },
+  { time: "10:00 م", price: 320 },
+  { time: "11:00 م", price: 260 },
+  { time: "12:00 ص", price: 220 },
 ];
 
 const products = [
@@ -20,8 +20,15 @@ const products = [
 
 let selectedSlot = null;
 let selectedDuration = 60;
+let selectedDateIndex = 0;
 const cart = [];
+const bookedSlotsByDate = {
+  0: new Set([2, 4]),
+  1: new Set([3]),
+  3: new Set([1, 5]),
+};
 
+const weekDates = document.querySelector("#weekDates");
 const slotsGrid = document.querySelector("#slotsGrid");
 const selectedSlotText = document.querySelector("#selectedSlotText");
 const selectedPriceText = document.querySelector("#selectedPriceText");
@@ -40,6 +47,26 @@ function durationMultiplier() {
   return selectedDuration / 60;
 }
 
+function getWeekDays() {
+  const formatter = new Intl.DateTimeFormat("ar", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+  const days = [];
+
+  for (let index = 0; index < 7; index += 1) {
+    const date = new Date();
+    date.setDate(date.getDate() + index);
+    days.push({
+      label: index === 0 ? "اليوم" : index === 1 ? "غدًا" : formatter.format(date),
+      fullDate: date.toLocaleDateString("ar"),
+    });
+  }
+
+  return days;
+}
+
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add("is-visible");
@@ -51,17 +78,19 @@ function showToast(message) {
 
 function renderSlots() {
   slotsGrid.innerHTML = "";
+  const bookedSlots = bookedSlotsByDate[selectedDateIndex] || new Set();
 
   slots.forEach((slot, index) => {
+    const isBooked = bookedSlots.has(index);
     const button = document.createElement("button");
     button.type = "button";
     button.className = "slot";
-    button.classList.toggle("is-booked", slot.booked);
+    button.classList.toggle("is-booked", isBooked);
     button.classList.toggle("is-selected", selectedSlot === index);
-    button.disabled = slot.booked;
+    button.disabled = isBooked;
     button.innerHTML = `
       <strong>${slot.time}</strong>
-      <span>${slot.booked ? "محجوز" : formatCurrency(slot.price * durationMultiplier())}</span>
+      <span>${isBooked ? "محجوز" : formatCurrency(slot.price * durationMultiplier())}</span>
     `;
 
     button.addEventListener("click", () => {
@@ -74,6 +103,28 @@ function renderSlots() {
   });
 }
 
+function renderWeekDates() {
+  weekDates.innerHTML = "";
+
+  getWeekDays().forEach((day, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "date-chip";
+    button.classList.toggle("is-active", selectedDateIndex === index);
+    button.innerHTML = `<span>${day.label}</span><strong>${day.fullDate}</strong>`;
+
+    button.addEventListener("click", () => {
+      selectedDateIndex = index;
+      selectedSlot = null;
+      updateBookingSummary();
+      renderWeekDates();
+      renderSlots();
+    });
+
+    weekDates.appendChild(button);
+  });
+}
+
 function updateBookingSummary() {
   if (selectedSlot === null) {
     selectedSlotText.textContent = "اختر وقتًا";
@@ -82,7 +133,8 @@ function updateBookingSummary() {
   }
 
   const slot = slots[selectedSlot];
-  selectedSlotText.textContent = `${slot.time} لمدة ${selectedDuration} دقيقة`;
+  const day = getWeekDays()[selectedDateIndex];
+  selectedSlotText.textContent = `${day.label} ${slot.time} لمدة ${selectedDuration} دقيقة`;
   selectedPriceText.textContent = formatCurrency(slot.price * durationMultiplier());
 }
 
@@ -93,13 +145,17 @@ function confirmSelectedBooking() {
   }
 
   const slot = slots[selectedSlot];
-  slot.booked = true;
+  if (!bookedSlotsByDate[selectedDateIndex]) {
+    bookedSlotsByDate[selectedDateIndex] = new Set();
+  }
+  bookedSlotsByDate[selectedDateIndex].add(selectedSlot);
+  const day = getWeekDays()[selectedDateIndex];
 
   const item = document.createElement("li");
-  item.innerHTML = `<span>حجز جديد</span><strong>اليوم ${slot.time}</strong>`;
+  item.innerHTML = `<span>حجز جديد</span><strong>${day.label} ${slot.time}</strong>`;
   upcomingBookings.prepend(item);
 
-  showToast(`تم تأكيد حجز الملعب الساعة ${slot.time}`);
+  showToast(`تم تأكيد حجز الملعب ${day.label} الساعة ${slot.time}`);
   selectedSlot = null;
   updateBookingSummary();
   renderSlots();
@@ -199,6 +255,7 @@ function initIcons() {
 }
 
 renderSlots();
+renderWeekDates();
 renderProducts();
 renderCart();
 updateBookingSummary();

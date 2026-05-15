@@ -28,7 +28,6 @@ const bookedSlotsByDate = {
   3: new Set([1, 5]),
 };
 
-const weekDates = document.querySelector("#weekDates");
 const slotsGrid = document.querySelector("#slotsGrid");
 const selectedSlotText = document.querySelector("#selectedSlotText");
 const selectedPriceText = document.querySelector("#selectedPriceText");
@@ -38,6 +37,60 @@ const productsGrid = document.querySelector("#productsGrid");
 const cartList = document.querySelector("#cartList");
 const cartTotal = document.querySelector("#cartTotal");
 const toast = document.querySelector("#toast");
+let weekDates = document.querySelector("#weekDates");
+
+if (!weekDates) {
+  weekDates = document.createElement("div");
+  weekDates.className = "week-dates";
+  weekDates.id = "weekDates";
+  weekDates.setAttribute("aria-label", "اختيار تاريخ الحجز");
+  slotsGrid.before(weekDates);
+}
+
+const weekDateStyles = document.createElement("style");
+weekDateStyles.textContent = `
+  .week-dates {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .date-chip {
+    display: grid;
+    gap: 5px;
+    min-height: 70px;
+    padding: 10px 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  .date-chip strong {
+    color: var(--text);
+    font-size: 17px;
+  }
+  .date-chip span {
+    font-size: 12px;
+  }
+  .date-chip:hover,
+  .date-chip.is-active {
+    border-color: rgba(25, 212, 123, 0.62);
+    color: var(--text);
+    background: rgba(25, 212, 123, 0.1);
+  }
+  .date-chip.is-active strong,
+  .date-chip.is-active span {
+    color: var(--green);
+  }
+  @media (max-width: 760px) {
+    .week-dates {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+`;
+document.head.appendChild(weekDateStyles);
 
 function formatCurrency(value) {
   return `${value} ش.ج`;
